@@ -1,0 +1,53 @@
+version: '3'
+services:
+  alice:
+    build: .
+    ports:
+      - "8082:8090"
+    environment:
+      - SCOKET_ADDRESS=10.10.0.2:8090
+      - "VIEW=10.10.0.2:8090,10.10.0.3:8090,10.10.0.4:8090"
+    volumes:
+      - ".:/app"
+    networks:
+      asg3net:
+        ipv4_address: 10.10.0.2
+    container_name: alice
+    command: tail -f /dev/null
+
+  bob:
+    build: .
+    ports:
+      - "8083:8090"
+    environment:
+      - SCOKET_ADDRESS=10.10.0.2:8090
+      - "VIEW=10.10.0.2:8090,10.10.0.3:8090,10.10.0.4:8090"
+    volumes:
+      - ".:/app"
+    networks:
+      asg3net:
+        ipv4_address: 10.10.0.3
+    container_name: bob
+    command: tail -f /dev/null
+
+  carol:
+    build: .
+    ports:
+      - "8084:8090"
+    environment:
+      - SCOKET_ADDRESS=10.10.0.2:8090
+      - VIEW=10.10.0.2:8090,10.10.0.3:8090,10.10.0.4:8090
+    volumes:
+      - ".:/app"
+    networks:
+      asg3net:
+        ipv4_address: 10.10.0.4
+    container_name: carol
+    command: tail -f /dev/null
+
+networks:
+  asg3net:
+    ipam:
+      driver: default
+      config:
+      - subnet: "10.10.0.0/16"
