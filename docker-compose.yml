@@ -5,7 +5,7 @@ services:
     ports:
       - "8082:8090"
     environment:
-      - SCOKET_ADDRESS=10.10.0.2:8090
+      - SOCKET_ADDRESS=10.10.0.2:8090
       - "VIEW=10.10.0.2:8090,10.10.0.3:8090,10.10.0.4:8090"
     volumes:
       - ".:/app"
@@ -20,7 +20,7 @@ services:
     ports:
       - "8083:8090"
     environment:
-      - SCOKET_ADDRESS=10.10.0.2:8090
+      - SOCKET_ADDRESS=10.10.0.3:8090
       - "VIEW=10.10.0.2:8090,10.10.0.3:8090,10.10.0.4:8090"
     volumes:
       - ".:/app"
@@ -35,7 +35,7 @@ services:
     ports:
       - "8084:8090"
     environment:
-      - SCOKET_ADDRESS=10.10.0.2:8090
+      - SOCKET_ADDRESS=10.10.0.4:8090
       - VIEW=10.10.0.2:8090,10.10.0.3:8090,10.10.0.4:8090
     volumes:
       - ".:/app"
