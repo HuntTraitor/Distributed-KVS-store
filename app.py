@@ -1,16 +1,18 @@
-from flask import Flask, request, jsonify
-from backend.kvs_store import put,get,delete
-from backend.update_system import broadcast
-from backend.update_metadata import update_metadata, create_metadata
+from flask import Flask, request
+from backend.kvs_store import put,get,delete, update_store
 import socket
 import threading
 import os
-import time
+import json
 app = Flask(__name__)
 
 
 def handle_client(client_socket):
     print(f"Got your message!")
+    data = client_socket.recv(1024)
+    data = data.decode()
+    data = json.loads(data)
+    update_store(data['key'], data['request']['value'])
     client_socket.close()
 
 def launch_server():
@@ -35,15 +37,20 @@ def update(key):
     if request.method == 'PUT':
         data = request.get_json()
         output = put(data, key)
-
         ip_list = os.environ.get("VIEW").split(",")
         this_ip = os.environ.get("SOCKET_ADDRESS")
         ip_list.remove(this_ip)
-        print(f"THIS IP: {this_ip}")
         for ip in ip_list:
             ip_address, port = ip.split(":")
             clientSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             clientSocket.connect((ip_address, 8100))
+            payload = {
+                "key":key,
+                "request":data,
+                "response": json.loads(output[0])
+            }
+            payload = json.dumps(payload)
+            clientSocket.send(payload.encode())
 
 
     elif request.method == 'GET':
@@ -55,8 +62,6 @@ def update(key):
 if __name__ == "__main__":
     t = threading.Thread(target=launch_server)
     t.start()
-
-    time.sleep(1)
 
     this_ip = os.environ.get("SOCKET_ADDRESS")
     ip, port = this_ip.split(":")
