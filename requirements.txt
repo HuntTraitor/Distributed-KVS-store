@@ -1,1 +1,4 @@
 flask
+requests
+python-socketio
+flask_socketio
