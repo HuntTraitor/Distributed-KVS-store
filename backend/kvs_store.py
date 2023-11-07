@@ -1,7 +1,7 @@
 from flask import jsonify
 import os
 import json
-from .update_metadata import create_metadata, check_metadata
+from .update_metadata import create_metadata, check_metadata, update_metadata
 
 #initializing store
 store = {}
@@ -17,13 +17,15 @@ def put(data, key): # Hunter
         elif key in store:
                 store[key] = data['value']
                 casual_metadata = create_metadata()
+                update_metadata(casual_metadata)
                 return json.dumps({"result":"replaced", "casual-metadata": f"{casual_metadata}"}), 200 # we need to broadcast casual_metadata here to the other instances to put them in their memory
         else:
             store[key] = data['value']
             casual_metadata = create_metadata()
+            update_metadata(casual_metadata)
             return json.dumps({"result":"created", "casual-metadata": f"{casual_metadata}"}), 201
     elif isUpToDate == False:
-        return "Not up to date sorry"
+        return jsonify({"error": "not up to date"}), 503
 
 
 
@@ -42,3 +44,6 @@ def delete(key): # David
 
 def update_store(key, value):
     store[key] = value
+
+def print_store():
+    print(store)

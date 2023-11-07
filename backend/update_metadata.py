@@ -6,7 +6,6 @@ def create_metadata():
     global time
     casual_metadata = f"{os.environ.get('SOCKET_ADDRESS')}-{str(time)}"
     time += 1
-    metadata_list.append(casual_metadata)
     return casual_metadata
 
 def check_metadata(metadata):
@@ -17,3 +16,6 @@ def check_metadata(metadata):
     
 def update_metadata(metadata):
     metadata_list.append(metadata)
+
+def print_metadata():
+    print(metadata_list)
