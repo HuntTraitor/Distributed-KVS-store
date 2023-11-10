@@ -2,7 +2,7 @@ from flask import jsonify
 import json
 
 # initializing store for view
-views = {"view": []}
+view_store = {"view": []}
 
 def put(addr):
     return False
