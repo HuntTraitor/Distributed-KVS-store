@@ -1,5 +1,4 @@
 from flask import jsonify
-import os
 import json
 from .update_metadata import create_metadata, check_metadata, update_metadata
 
@@ -18,32 +17,48 @@ def put(data, key): # Hunter
                 store[key] = data['value']
                 casual_metadata = create_metadata()
                 update_metadata(casual_metadata)
-                return json.dumps({"result":"replaced", "casual-metadata": f"{casual_metadata}"}), 200 # we need to broadcast casual_metadata here to the other instances to put them in their memory
+                return json.dumps({"result":"replaced", "casual-metadata": f"{casual_metadata}"}), 200
         else:
             store[key] = data['value']
             casual_metadata = create_metadata()
             update_metadata(casual_metadata)
             return json.dumps({"result":"created", "casual-metadata": f"{casual_metadata}"}), 201
-    elif isUpToDate == False:
-        return jsonify({"error": "not up to date"}), 503
-
-
-
-def get(key): # Alan
-    if key in store: 
-        return jsonify({"result": "found", "value": store[key]}), 200
-    else: 
-        return jsonify({"error": "Key does not exist"}), 404
-
-def delete(key): # David
-    if key in store:
-        store.pop(key)
-        return jsonify({"result":"deleted"}), 200
     else:
-        return jsonify({"error":"Key does not exist"}), 404
+        return jsonify({"error": "Casual dependencies not satisfied; try again later"}), 503
 
-def update_store(key, value):
-    store[key] = value
+
+def get(data, key):
+    isUpToDate = check_metadata(data['casual-metadata'])
+    if isUpToDate == True:
+        if key in store: 
+            casual_metadata = create_metadata()
+            update_metadata(casual_metadata)
+            return json.dumps({"result": "found", "value": store[key], "casual-metadata": f"{casual_metadata}"}), 200
+        else: 
+            return json.dumps({"error": "Key does not exist"}), 404
+    else:
+        return jsonify({"error":"Casual dependencies not satisfied; try again later"}), 503
+
+
+def delete(data, key): # David
+    isUpToDate = check_metadata(data['casual-metadata'])
+    if isUpToDate == True:
+        if key in store:
+            store.pop(key)
+            casual_metadata = create_metadata()
+            update_metadata(casual_metadata)
+            return json.dumps({"result":"deleted", "casual-metadata": f"{casual_metadata}"}), 200
+        else:
+            return json.dumps({"error":"Key does not exist"}), 404
+    else:
+        # we need to resend the data if this occurs
+        return jsonify({"error":"Casual dependencies not satisfied; try again later"}), 503
+
+def update_store(key, request, value=None):
+    if request == 'PUT':
+        store[key] = value
+    elif request == 'DELETE':
+        store.pop(key)
 
 def print_store():
     print(store)
