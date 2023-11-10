@@ -1,6 +1,6 @@
 from flask import Flask, request
 from backend.kvs_store import put,get,delete
-from backend.communication import communication_thread, broadcast
+from backend.communication import communication_thread, broadcast, real_broadcast
 import threading
 import os
 app = Flask(__name__)
@@ -11,15 +11,28 @@ def update(key):
     if request.method == 'PUT':
         data = request.get_json()
         output = put(data, key)
-        broadcast(key, output, data, request.method)
+        real_broadcast(key, data, request.method)
     elif request.method == 'GET':
         data = request.get_json()
         output = get(data, key)
-        broadcast(key, output, data, request.method)
+        real_broadcast(key, data, request.method)
     elif request.method == 'DELETE':
         data = request.get_json()
         output = delete(data, key)
-        broadcast(key, output, data, request.method)
+        real_broadcast(key, data, request.method)
+    return output
+
+@app.route('/kvs/broadcast/<key>', methods=['PUT','GET','DELETE'])
+def update_repliace(key):
+    if request.method == 'PUT':
+        data = request.get_json()
+        output = put(data, key)
+    elif request.method == 'GET':
+        data = request.get_json()
+        output = get(data, key)
+    elif request.method == 'DELETE':
+        data = request.get_json()
+        output = delete(data, key)
     return output
 
 if __name__ == "__main__":
