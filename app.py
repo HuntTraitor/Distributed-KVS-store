@@ -34,6 +34,16 @@ def update_repliace(key):
         output = delete(data, key)
     return output
 
+@app.route('/view/<addr>', methods=['PUT', 'GET', 'DELETE'])
+def manage_view(addr):
+    if request.method == 'PUT':
+        output, _ = put(addr)
+    elif request.method == 'GET':
+        output, _ = get(addr)
+    elif request.method == 'DELETE':
+        output, _ = delete(addr)
+    return output
+    
 if __name__ == "__main__":
     this_ip = os.environ.get("SOCKET_ADDRESS")
     ip, port = this_ip.split(":")
