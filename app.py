@@ -33,6 +33,19 @@ def update_repliace(key):
         data = request.get_json()
         output = delete(data, key)
     return output
+
+
+@app.route('/view', methods=['PUT', 'GET', 'DELETE'])
+def manage_view():
+    if request.method == 'PUT':
+        data = request.get_json()
+        output, _ = put(data["socket-address"], "PUT")
+    elif request.method == 'GET':
+        output = get()
+    elif request.method == 'DELETE':
+        data = request.get_json()
+        output, _ = delete(data["socket-address"], "DELETE")
+    return output
     
 if __name__ == "__main__":
     this_ip = os.environ.get("SOCKET_ADDRESS")
