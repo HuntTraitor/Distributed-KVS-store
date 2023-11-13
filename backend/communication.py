@@ -20,5 +20,8 @@ def broadcast(key, data, request, output):
                 elif request == 'DELETE':
                     response = requests.delete(url, json=data, timeout=2)
             except requests.exceptions.RequestException:
-                # send put request for view
-                pass
+                # ip is down, so delete ip from every existing replica's view
+                for jp in ip_list+[this_ip]:
+                    if jp != ip:
+                        url = f"http://{jp}/view/broadcast"
+                        response = requests.delete(url, json=data)
