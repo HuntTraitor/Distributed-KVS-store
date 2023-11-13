@@ -36,16 +36,16 @@ def update_repliace(key):
     return output
 
 
-@app.route('/view', methods=['PUT', 'GET', 'DELETE'])
+@app.route('/view', methods=['PUT','GET','DELETE'])
 def manage_view():
     if request.method == 'PUT':
         data = request.get_json()
-        output, _ = put_view(data["socket-address"], "PUT")
+        output, _ = put_view(data.get("SOCKET_ADDRESS"))
     elif request.method == 'GET':
         output = get_view()
     elif request.method == 'DELETE':
         data = request.get_json()
-        output, _ = delete_view(data["socket-address"], "DELETE")
+        output, _ = delete_view(data.get("SOCKET_ADDRESS"))
     return output
     
 if __name__ == "__main__":

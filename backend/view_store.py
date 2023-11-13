@@ -2,7 +2,7 @@ from flask import jsonify
 import os
 
 # get VIEW as a list
-view = os.environ.get("VIEW").split(" ")
+view = os.environ.get("VIEW").split(",")
 
 def put(addr): # assumes addr is in the form: <IP:PORT> as dealt with in app.py
     if addr in view:
