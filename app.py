@@ -2,6 +2,7 @@ from flask import Flask, request
 from backend.kvs_store import put,get,delete
 from backend.communication import broadcast
 from backend.update_metadata import print_metadata
+from backend.view_store import put as put_view, get as get_view, delete as delete_view
 import os
 app = Flask(__name__)
 
@@ -39,12 +40,12 @@ def update_repliace(key):
 def manage_view():
     if request.method == 'PUT':
         data = request.get_json()
-        output, _ = put(data["socket-address"], "PUT")
+        output, _ = put_view(data["socket-address"], "PUT")
     elif request.method == 'GET':
-        output = get()
+        output = get_view()
     elif request.method == 'DELETE':
         data = request.get_json()
-        output, _ = delete(data["socket-address"], "DELETE")
+        output, _ = delete_view(data["socket-address"], "DELETE")
     return output
     
 if __name__ == "__main__":
