@@ -1,6 +1,7 @@
 from flask import Flask, request
 from backend.kvs_store import put,get,delete
 from backend.communication import broadcast
+from backend.communication import view_broadcast
 from backend.update_metadata import print_metadata
 from backend.view_store import put as put_view, get as get_view, delete as delete_view
 import os
@@ -41,12 +42,28 @@ def manage_view():
     if request.method == 'PUT':
         data = request.get_json()
         output, _ = put_view(data.get("SOCKET_ADDRESS"))
+        view_broadcast(data, request, output)
+    elif request.method == 'GET':
+        output = get_view()
+    elif request.method == 'DELETE':
+        data = request.get_json()
+        output, _ = delete_view(data.get("SOCKET_ADDRESS"))
+        view_broadcast(data, request, output)
+    return output
+
+
+@app.route('/view/broadcast', methods=['PUT', 'GET', 'DELETE'])
+def manage_view_replicate():
+    if request.method == 'PUT':
+        data = request.get_json()
+        output, _ = put_view(data.get("SOCKET_ADDRESS"))
     elif request.method == 'GET':
         output = get_view()
     elif request.method == 'DELETE':
         data = request.get_json()
         output, _ = delete_view(data.get("SOCKET_ADDRESS"))
     return output
+
     
 if __name__ == "__main__":
     this_ip = os.environ.get("SOCKET_ADDRESS")
