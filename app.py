@@ -56,12 +56,12 @@ def manage_view():
 def manage_view_replicate():
     if request.method == 'PUT':
         data = request.get_json()
-        output, _ = put_view(data.get("SOCKET_ADDRESS"))
+        output = put_view(data.get("SOCKET_ADDRESS"))
     elif request.method == 'GET':
         output = get_view()
     elif request.method == 'DELETE':
         data = request.get_json()
-        output, _ = delete_view(data.get("SOCKET_ADDRESS"))
+        output = delete_view(data.get("SOCKET_ADDRESS"))
     return output
 
     
