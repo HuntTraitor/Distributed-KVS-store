@@ -4,6 +4,7 @@ from backend.communication import broadcast
 from backend.communication import view_broadcast
 from backend.update_metadata import print_metadata
 from backend.view_store import put as put_view, get as get_view, delete as delete_view
+from backend.communication import update_all_replicas
 import os
 app = Flask(__name__)
 
@@ -41,14 +42,18 @@ def update_repliace(key):
 def manage_view():
     if request.method == 'PUT':
         data = request.get_json()
-        output, _ = put_view(data.get("SOCKET_ADDRESS"))
-        view_broadcast(data, request, output)
+        socket = data.get("SOCKET_ADDRESS")
+        output, _ = put_view(socket)
+        # view_broadcast(data, request, output)
+        update_all_replicas(socket, request, data)
     elif request.method == 'GET':
-        output = get_view()
+        output, _ = get_view()
     elif request.method == 'DELETE':
         data = request.get_json()
-        output, _ = delete_view(data.get("SOCKET_ADDRESS"))
-        view_broadcast(data, request, output)
+        socket = data.get("SOCKET_ADDRESS")
+        output, _ = delete_view(socket)
+        # view_broadcast(data, request, output)
+        update_all_replicas(socket, request, data)
     return output
 
 

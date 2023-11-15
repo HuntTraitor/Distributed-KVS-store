@@ -49,3 +49,33 @@ def view_broadcast(data, request, output): # view
                     if jp != ip:
                         url = f"http://{jp}/view/broadcast"
                         response = requests.delete(url, json=data)      
+                    
+def update_all_replicas(socket, request, data): 
+    ip_list = os.environ.get("VIEW").split(".")
+    this_ip = socket
+    ip_list.remove(this_ip)
+    for ip in ip_list: 
+        url = f"http://{ip}/view"
+        try:
+            if request == 'PUT':
+                response = request.put(url, json = data, timeout=2)
+            elif request == 'DELETE': 
+                response = request.delete(url, json = data, timeout=2)
+        except: 
+            pass 
+        
+
+def add_kvs_data (socket, request, data):
+    ip_list = os.environ.get("VIEW").split(".")
+    this_ip = socket 
+    ip_list.remove(this_ip)
+    url = f"http://{ip_list[0]}/"
+    # look at current replicas store 
+    # for each key in the store call PUT on the new replica
+    
+    
+        
+    
+        
+            
+                    
