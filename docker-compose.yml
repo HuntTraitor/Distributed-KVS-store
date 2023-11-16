@@ -13,7 +13,7 @@ services:
       asg3net:
         ipv4_address: 10.10.0.2
     container_name: alice
-    command: tail -f /dev/null
+    command: python3 app.py
 
   bob:
     build: .
@@ -28,7 +28,7 @@ services:
       asg3net:
         ipv4_address: 10.10.0.3
     container_name: bob
-    command: tail -f /dev/null
+    command: python3 app.py
 
   carol:
     build: .
@@ -43,7 +43,7 @@ services:
       asg3net:
         ipv4_address: 10.10.0.4
     container_name: carol
-    command: tail -f /dev/null
+    command: python3 app.py
 
 networks:
   asg3net:

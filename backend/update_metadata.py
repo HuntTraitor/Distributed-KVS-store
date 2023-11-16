@@ -17,5 +17,12 @@ def check_metadata(metadata):
 def update_metadata(metadata):
     metadata_list.append(metadata)
 
+def update_metadata_list(metadata):
+    global metadata_list
+    metadata_list = metadata
+
+def get_metadata():
+    return metadata_list
+
 def print_metadata():
     print(metadata_list)
