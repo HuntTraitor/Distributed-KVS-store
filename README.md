@@ -8,7 +8,7 @@ The store supports view operations (manages which replicas are part of the clust
 
 ### Causal Dependencies
 
-(put it here)
+Our system uses lamport timestamps to track causal metadata. It uses its IPv4 and port number as a unique ID for every machine. There is a time counter in each node that increments every time an event is triggered at that specific ID and we set "ID-time" to uniquely identify the event. This event is then placed into the causal metadata and broadcasted to the other nodes along with the request itself.
 
 ### Replica Down Detection
 
