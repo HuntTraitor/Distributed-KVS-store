@@ -1,4 +1,4 @@
-# CSE138_Assignment3
+# Distributed-KVS-store
 
 A replicated, fault-tolerant, and causally consistent *key-value store*, running as a collection of three *replicas*. These replicas can make requests and broadcast state changes to each other. When they update the local store or show a (causally, consistent) view of the store to clients, the causal order of events is preserved Also, if a replica crashes, the store is still up since the other replicas are up. No data is lost due to replication, but the local copy of the store is lost. Additionally, replicas provide and receive causal metadata to and from clients, ensuring that clients have a causally consistent view of the store.
 
